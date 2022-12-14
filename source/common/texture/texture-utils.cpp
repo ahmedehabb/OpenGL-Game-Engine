@@ -34,8 +34,30 @@ our::Texture2D* our::texture_utils::loadImage(const std::string& filename, bool 
     // Create a texture
     our::Texture2D* texture = new our::Texture2D();
     //Bind the texture such that we upload the image data to its storage
+   
     //TODO: (Req 5) Finish this function to fill the texture with the data found in "pixels"
-    
+    //here I binded the texture by creating a texture with the constuctor of the texture class
+    //then I  binded the texture to the GL_TEXTURE_2D using bind function in the utils class
+    texture->bind();
+    //here we could use 1 because there's no padding used in the image
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    //here we set the texture parameters
+    //first parameter is the target which is GL_TEXTURE_2D
+    //second is the mipmap level which is 0
+    //third is the internal format of how pixels will be saved in vram
+    //fourth is the width of the image
+    //fifth is the height of the image
+    //sixth is the border which is 0
+    //seventh is the format of the pixels (data of the texture itself) which is GL_RGBA
+    //eighth is the type of the pixels which is GL_UNSIGNED_BYTE 0-255
+    //ninth is the pointer to the pixels data 
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, &pixels);
+    //here i am asking to build a mip map so that it could be used for magnification and minification from the different levels
+    if(generate_mipmap) 
+    {
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }    
+
     stbi_image_free(pixels); //Free image data after uploading to GPU
     return texture;
 }
