@@ -49,13 +49,15 @@ namespace our {
         // Then we check if there is a postprocessing shader in the configuration
         if(config.contains("postprocess")){
             //TODO: (Req 11) Create a framebuffer
+            glGenFramebuffers(1, &postprocessFrameBuffer);
+
 
             //TODO: (Req 11) Create a color and a depth texture and attach them to the framebuffer
             // Hints: The color format can be (Red, Green, Blue and Alpha components with 8 bits for each channel).
             // The depth format can be (Depth component with 24 bits).
             
             //TODO: (Req 11) Unbind the framebuffer just to be safe
-
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
             // Create a vertex array to use for drawing the texture
             glGenVertexArrays(1, &postProcessVertexArray);
 
@@ -139,6 +141,9 @@ namespace our {
         std::sort(transparentCommands.begin(), transparentCommands.end(), [cameraForward](const RenderCommand& first, const RenderCommand& second){
             //TODO: (Req 9) Finish this function
             // HINT: the following return should return true "first" should be drawn before "second". 
+            if(glm::dot(first.center, cameraForward) > glm::dot(second.center, cameraForward)){
+                return true;
+            }
             return false;
         });
 
@@ -154,11 +159,11 @@ namespace our {
         // If there is a postprocess material, bind the framebuffer
         if(postprocessMaterial){
             //TODO: (Req 11) bind the framebuffer
-            
+            glBindFramebuffer(GL_FRAMEBUFFER, postprocessFrameBuffer);
         }
 
         //TODO: (Req 9) Clear the color and depth buffers
-        
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         //TODO: (Req 9) Draw all the opaque commands
         // Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
         
