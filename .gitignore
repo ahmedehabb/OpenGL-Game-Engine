@@ -23,6 +23,3 @@ CMakeSettings.json
 
 # Screenshots
 screenshots/
-
-#cmake list since each user configured it due to his pc 
-CMakeLists.txt
