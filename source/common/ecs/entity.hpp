@@ -82,7 +82,7 @@ namespace our {
             // could have done it in one loop only but this is better for code reusability
             
             // find the first component that can be dynamically cast to "T*".
-            T* firstFound = getComponent();
+            T* firstFound = getComponent<T*>();
             if(firstFound){
                 // reuse function deleteComponent which take T* and delete it
                 deleteComponent(firstFound);
