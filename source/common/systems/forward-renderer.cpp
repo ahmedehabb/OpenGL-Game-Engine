@@ -25,7 +25,7 @@ namespace our {
             skyPipelineState.depthTesting.enabled = true;
             skyPipelineState.depthTesting.function = GL_LEQUAL;
             // We will draw the sphere from the inside, so what options should we pick for the face culling.
-            skyPipelineState.faceCulling.enabled = true;
+            skyPipelineState.faceCulling.enabled = false;
             
             // Load the sky texture (note that we don't need mipmaps since we want to avoid any unnecessary blurring while rendering the sky)
             std::string skyTextureFile = config.value<std::string>("sky", "");
@@ -143,8 +143,14 @@ namespace our {
         glm::vec3 cameraForward = camera->getOwner()->getLocalToWorldMatrix() * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
         std::sort(transparentCommands.begin(), transparentCommands.end(), [cameraForward](const RenderCommand& first, const RenderCommand& second){
             //TODO: (Req 9) Finish this function
-            // HINT: the following return should return true "first" should be drawn before "second". 
-            return first.center.z  > second.center.z  ;
+            // HINT: the following return should return true "first" should be drawn before "second".
+            // get the projection of both points on the cameraForward vector but without normalization of the cameraForward
+            // since dividing both by the magnitude wont affect the result
+            
+            // first.center and second.center are wrt to world so dont need furthur processing
+            float projectionOfFirst =  glm::dot(first.center, cameraForward); 
+            float projectionOfSecond =  glm::dot(second.center, cameraForward);
+            return projectionOfFirst  > projectionOfSecond  ;
         });
 
         
@@ -182,12 +188,14 @@ namespace our {
         // If there is a sky material, draw the sky
         if(this->skyMaterial){
             //TODO: (Req 10) setup the sky material
-            skyMaterial->setup();
+            this->skyMaterial->setup();
             //TODO: (Req 10) Get the camera position
-            glm::mat4 cameraPosition = camera->getOwner()->getLocalToWorldMatrix();
-            //TODO: (Req 10) Create a model matrix for the sy such that it always follows the camera (sky sphere center = camera position)
             
+            glm::mat4 cameraPosition = camera->getOwner()->getLocalToWorldMatrix();
+            //TODO: (Req 10) Create a model matrix for the sky such that it always follows the camera (sky sphere center = camera position)
+            glm::mat4 modelMatrix = camera->getViewMatrix();
             //TODO: (Req 10) We want the sky to be drawn behind everything (in NDC space, z=1)
+            
             // We can acheive the is by multiplying by an extra matrix after the projection but what values should we put in it?
             glm::mat4 alwaysBehindTransform = glm::mat4(
                 1.0f, 0.0f, 0.0f, 0.0f,
