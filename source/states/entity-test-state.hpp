@@ -57,7 +57,7 @@ class EntityTestState: public our::State {
             meshRenderer->material->setup();
             //send the transform matrix to the shader 
             // uniform mat4 transform; // to set this uniform in the shaders
-            meshRenderer->material->shader->set("transform", entity->getLocalToWorldMatrix());
+            meshRenderer->material->shader->set("transform", VP * entity->getLocalToWorldMatrix());
             //then draw the mesh
             meshRenderer->mesh->draw();
         }
