@@ -191,19 +191,20 @@ namespace our {
             //TODO: (Req 10) setup the sky material
             this->skyMaterial->setup();
             //TODO: (Req 10) Get the camera position
-            glm::vec4 cameraPosition = camera->getOwner()->getLocalToWorldMatrix() * glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f);
+            glm::mat4 cameraTransform = camera->getOwner()->getLocalToWorldMatrix();
             //TODO: (Req 10) Create a model matrix for the sky such that it always follows the camera (sky sphere center = camera position)
-            // will do translation only to camera center since no mean to rotate or scale the sky
-            //TODO :: MAY NEED TRANSPOSE
-            glm::mat4 skyModelMatrix = camera->getProjectionMatrix(this->windowSize) * glm::translate(glm::mat4(1.0f), glm::vec3(cameraPosition));
+
+            // then we will need the VP matrix to be converted into ndc space
+            glm::mat4 skyModelMatrix = VP * cameraTransform;
             
             //TODO: (Req 10) We want the sky to be drawn behind everything (in NDC space, z=1)
             // We can acheive the is by multiplying by an extra matrix after the projection but what values should we put in it?
+            // the third row should be (0,0,0,1) so the z component = 1 but here opengl on transposed version of our convention 
             glm::mat4 alwaysBehindTransform = glm::mat4(
                 1.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 1.0f, 0.0f, 0.0f,
-                0.0f, 0.0f, 0.0f, 1.0f,
-                0.0f, 0.0f, 0.0f, 1.0f
+                0.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 1.0f, 1.0f
             );
             //TODO: (Req 10) set the "transform" uniform
             this->skyMaterial->shader->set("transform", alwaysBehindTransform * skyModelMatrix);
