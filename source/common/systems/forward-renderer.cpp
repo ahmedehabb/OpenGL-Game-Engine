@@ -143,7 +143,7 @@ namespace our {
         std::sort(transparentCommands.begin(), transparentCommands.end(), [cameraForward](const RenderCommand& first, const RenderCommand& second){
             //TODO: (Req 9) Finish this function
             // HINT: the following return should return true "first" should be drawn before "second". 
-            return first.center.z * cameraForward.z > second.center.z * cameraForward.z;
+            return first.center.z  > second.center.z  ;
         });
 
         
@@ -153,12 +153,15 @@ namespace our {
         
 
         //TODO: (Req 9) Set the OpenGL viewport using viewportStart and viewportSize
-        // glViewport(viewportStart.x, viewportStart.y, viewportSize.x, viewportSize.y);
+        // HINT: glViewport takes 4 parameters: x, y, width and height
+        glViewport(0.0f, 0.0f,windowSize.x,windowSize.y);
         //TODO: (Req 9) Set the clear color to black and the clear depth to 1
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClearDepth(1.0f);
         //TODO: (Req 9) Set the color mask to true and the depth mask to true (to ensure the glClear will affect the framebuffer)
+        //TODO: (Req 9) understand this line and explain what it does
         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+        //TODO: (Req 9) understand this line and explain what it does
         glDepthMask(GL_TRUE);
 
         // If there is a postprocess material, bind the framebuffer
@@ -171,25 +174,10 @@ namespace our {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //TODO: (Req 9) Draw all the opaque commands
         // Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
-        for (auto command : opaqueCommands)
-			{
-				// setup material samplers => albedo ..etc
-				command.material->setup();
-				command.material->shader->set("transform", command.localToWorld); // remove VP for light
-				command.material->shader->set("transform_IT", glm::transpose(glm::inverse(command.localToWorld)));
-				// -- for lighting support -- //
-				command.material->shader->set("VP", VP);
-				glm::vec4 eye = camera->getOwner()->getLocalToWorldMatrix() * glm::vec4(0, 0, 0, 1);
-				command.material->shader->set("eye", glm::vec3(eye));
-				//----------------------------------------------------
-				// command.material->shader->set("light_count", (int)lights.size());
-				// command.material->shader->set("sky_light.sky", glm::vec3(0.2, 0.6, 0.8));
-				// command.material->shader->set("sky_light.horizon", glm::vec3(0.5, 0.5, 0.5));
-				// command.material->shader->set("sky_light.ground", glm::vec3(0.2, 0.7, 0.4));
-				int light_index = 0;
-				const int MAX_LIGHT_COUNT = 8;
-				command.mesh->draw();
-			}
+        for (auto command : opaqueCommands) {
+            command.material->setup();
+            command.mesh->draw();
+        }
         // If there is a sky material, draw the sky
         if(this->skyMaterial){
             //TODO: (Req 10) setup the sky material
@@ -207,14 +195,15 @@ namespace our {
                 0.0f, 0.0f, 0.0f, 1.0f
             );
             //TODO: (Req 10) set the "transform" uniform
-            // glUniformMatrix4fv(skyMaterial->shader->getUniformLocation("transform"), 1, GL_FALSE, glm::value_ptr(VP * alwaysBehindTransform * skyModel));
+            
             //TODO: (Req 10) draw the sky sphere
             // glDrawSphere(;
         }
         //TODO: (Req 9) Draw all the transparent commands
         // Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
         for (auto command : transparentCommands) {
-            
+            command.material->setup();
+            command.mesh->draw();
         }
 
         // If there is a postprocess material, apply postprocessing
