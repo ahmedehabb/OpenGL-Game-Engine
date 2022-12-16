@@ -13,13 +13,13 @@ namespace our {
     glm::mat4 Entity::getLocalToWorldMatrix() const {
         //TODO: (Req 8) Write this function
         // calculate localToWorld matrix recursively
-        // first set it to identity
-        glm::mat4 localToWorld = glm::mat4(1.0f);
-        Entity* current = (Entity*)this;
+        // first set it to localTranfrom which is matrix relative to your parent
+        glm::mat4 localToWorld = this->localTransform.toMat4();
+        Entity* current = this->parent;
         // loop till parent is null (root)
-        while(current->parent){
+        while(current){
             // multiply the current localTransform from the left to preserve order
-            localToWorld = this->localTransform.toMat4() * localToWorld;
+            localToWorld = current->localTransform.toMat4() * localToWorld;
             // go up one level
             current = current->parent;
         }
