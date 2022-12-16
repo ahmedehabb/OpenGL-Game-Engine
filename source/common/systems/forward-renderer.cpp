@@ -214,6 +214,7 @@ namespace our {
         // Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
         for (auto command : transparentCommands) {
             command.material->setup();
+            command.material->shader->set("transform", VP * command.localToWorld);
             command.mesh->draw();
         }
 
