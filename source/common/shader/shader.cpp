@@ -25,6 +25,30 @@ bool our::ShaderProgram::attach(const std::string &filename, GLenum type) const 
     // an error in the given shader. You should use it to check if there is a
     // compilation error and print it so that you can know what is wrong with
     // the shader. The returned string will be empty if there is no errors.
+    //Note: The function "glCreateShader" creates a shader object and returns
+    // a GLuint which is the shader object name. You should use it to create
+    // a shader object.
+    //Note: The function "glShaderSource" sets the source code in the shader
+    // object. You should use it to set the source code of the shader object.
+    //Note: The function "glCompileShader" compiles the source code strings
+    // that have been stored in the shader object. You should use it to compile
+    // the shader object.
+    //Note: The function "glAttachShader" attaches a shader object to a program
+    // object. You should use it to attach the shader object to the program
+    // object.
+    GLuint shader = glCreateShader(type);
+    glShaderSource(shader, 1, &sourceCStr, nullptr);
+    //check for errors
+    glCompileShader(shader);
+   if(std::string error = checkForShaderCompilationErrors(shader); error.size() != 0){
+        std::cerr << "ERROR IN " << filename << std::endl;
+        std::cerr << error << std::endl;
+        glDeleteShader(shader);
+        return false;
+    }
+
+    glAttachShader(program, shader);
+    glDeleteShader(shader);
 
     //We return true if the compilation succeeded
     return true;
@@ -38,6 +62,18 @@ bool our::ShaderProgram::link() const {
     // an error in the given program. You should use it to check if there is a
     // linking error and print it so that you can know what is wrong with the
     // program. The returned string will be empty if there is no errors.
+    //Note: The function "glLinkProgram" links the program object specified
+    // by program. You should use it to link the program object.
+    //Note: The function "glValidateProgram" validates the program object
+    // specified by program. You should use it to validate the program object.
+    //check for errors
+    glLinkProgram(program);
+    std::string error = checkForLinkingErrors(program);
+   if(auto error = checkForLinkingErrors(program); error.size() != 0){
+        std::cerr << "LINKING ERROR" << std::endl;
+        std::cerr << error << std::endl;
+        return false;
+    }
 
     return true;
 }
