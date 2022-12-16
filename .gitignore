@@ -27,3 +27,6 @@ scripts/run-all.ps1
 
 # Screenshots
 screenshots/
+
+# Errors
+errors/
