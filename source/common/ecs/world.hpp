@@ -55,6 +55,7 @@ namespace our {
             //TODO: (Req 8) Remove and delete all the entities that have been marked for removal
             for (Entity* entity : markedForRemoval){
                 entities.erase(entity);
+                delete entity;
             }
             // at the end marked for removal contains all entities that are erased so we must clear it
             markedForRemoval.clear();
@@ -63,10 +64,11 @@ namespace our {
         //This deletes all entities in the world
         void clear(){
             //TODO: (Req 8) Delete all the entites and make sure that the containers are empty
-            if(entities.size() != 0){
-                entities.erase(entities.begin(), entities.end());
+            for (Entity* entity : entities){
+                delete entity;
             }
             // at the end marked for removal could contain entities that are erased so we must clear it
+            entities.clear();
             markedForRemoval.clear();
         }
 
