@@ -23,6 +23,7 @@ CMakeSettings.json
 
 # Scripts since its Os dependent , windows 7 you have to change argument from c="" to c""
 scripts/
+scripts/run-all.ps1
 
 # Screenshots
 screenshots/
