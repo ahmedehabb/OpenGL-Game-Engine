@@ -8,7 +8,9 @@
 our::Texture2D* our::texture_utils::empty(GLenum format, glm::ivec2 size){
     our::Texture2D* texture = new our::Texture2D();
     //TODO: (Req 11) Finish this function to create an empty texture with the given size and format
-
+    // GLuint mip_levels = glm::floor(glm::log2(glm::max<float>(size.x, size.y))) + 1;
+    // glTexStorage2D(GL_TEXTURE_2D, mip_levels, format, size.x, size.y);
+    //target, mipmap level, internal format, width, height, border, format, type, data
     return texture;
 }
 
