@@ -241,8 +241,6 @@ int our::Application::run(int run_for_frames) {
 
     //Game loop
     while(!glfwWindowShouldClose(window)){
-        glClearColor((1180026 % 100) / 100.0f, int(1180026 % 100) / 100.0f, int(1180026 % 10000) / 100.0f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
         if(run_for_frames != 0 && current_frame >= run_for_frames) break;
         glfwPollEvents(); // Read all the user events and call relevant callbacks.
 

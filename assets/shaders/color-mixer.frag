@@ -9,6 +9,10 @@ in Varyings {
 
 out vec4 frag_color;
 
+uniform vec4 red = vec4(1.0, 0.0, 0.0, 0.0);
+uniform vec4 green = vec4(0.0, 1.0, 0.0, 0.0);
+uniform vec4 blue = vec4(0.0, 0.0, 1.0, 0.0);
+
 // currently the shader just returns the interpalated color varying.
 // However, we want to mix the color channels around. We can do this using a 
 // color matrix which we will send to the shader as 3 uniforms: red, green, blue.
@@ -22,11 +26,7 @@ out vec4 frag_color;
 //You will need to declare 3 uniforms: red, green, blue.
 
 void main(){
-    vec4 red = vec4(0.0, 1.0, 0.0, 0.0);
-    vec4 green = vec4(0.0, 0.0, 1.0, 0.0);
-    vec4 blue = vec4(1.0, 0.0, 0.0, 0.0);
-    frag_color.r = dot(red, vec4(fs_in.color, 1.0));
-    frag_color.g = dot(green, vec4(fs_in.color, 1.0));
-    frag_color.b = dot(blue, vec4(fs_in.color, 1.0));
-    frag_color.a = 1.0;
+    frag_color.r = dot(red.rgb, fs_in.color) + red.a;
+    frag_color.g = dot(green.rgb, fs_in.color) + green.a;
+    frag_color.b = dot(blue.rgb, fs_in.color) + blue.a;
 }
