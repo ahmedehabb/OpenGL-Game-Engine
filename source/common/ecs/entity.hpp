@@ -52,7 +52,7 @@ namespace our {
             // Return the component you found, or return null of nothing was found.
             auto it = components.begin();
             while(it != components.end()){
-                if (dynamic_cast<T*>(*it) != nullptr)
+                if (dynamic_cast<T*>(*it) != NULL)
                 {
                     return dynamic_cast<T*>(*it);
                 }
@@ -85,7 +85,7 @@ namespace our {
             T* firstFound = getComponent<T*>();
             if(firstFound){
                 // reuse function deleteComponent which take T* and delete it
-                deleteComponent(firstFound);
+                deleteComponent<T*>(firstFound);
             }
         }
 
@@ -106,7 +106,7 @@ namespace our {
             // If found, delete the found component and remove it from the components list
             auto it = components.begin();
             while(it != components.end()){
-                if (dynamic_cast<T*>(*it) != nullptr && (*it) == component)
+                if (dynamic_cast<T*>(*it) != NULL && (*it) == component)
                 {
                     components.erase(it);
                     return;
@@ -118,10 +118,14 @@ namespace our {
         // Since the entity owns its components, they should be deleted alongside the entity
         ~Entity(){
             //TODO: (Req 8) Delete all the components in "components".
-            auto it = components.begin();
-            while(it != components.end()){
-                components.erase(it);
+
+            // Removes from the vector container and calls its destructor 
+            // but If the contained object is a pointer it doesnt take ownership of destroying it.
+            // so we must delete it ourselves
+            for (Component* component : components){
+                delete component;
             }
+            components.clear();
         }
 
         // Entities should not be copyable
