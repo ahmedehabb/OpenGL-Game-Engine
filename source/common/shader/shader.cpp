@@ -40,14 +40,14 @@ bool our::ShaderProgram::attach(const std::string &filename, GLenum type) const 
     glShaderSource(shader, 1, &sourceCStr, nullptr);
     //check for errors
     glCompileShader(shader);
-   if(std::string error = checkForShaderCompilationErrors(shader); error.size() != 0){
-        std::cerr << "ERROR IN " << filename << std::endl;
-        std::cerr << error << std::endl;
-        glDeleteShader(shader);
-        return false;
-    }
+    if(std::string error = checkForShaderCompilationErrors(shader); error.size() != 0){
+         std::cerr << "ERROR IN " << filename << std::endl;
+         std::cerr << error << std::endl;
+         glDeleteShader(shader);
+         return false;
+     }
 
-    glAttachShader(program, shader);
+    glAttachShader(this->program, shader);
     glDeleteShader(shader);
 
     //We return true if the compilation succeeded
@@ -67,13 +67,13 @@ bool our::ShaderProgram::link() const {
     //Note: The function "glValidateProgram" validates the program object
     // specified by program. You should use it to validate the program object.
     //check for errors
-    glLinkProgram(program);
+    glLinkProgram(this->program);
     std::string error = checkForLinkingErrors(program);
-   if(auto error = checkForLinkingErrors(program); error.size() != 0){
-        std::cerr << "LINKING ERROR" << std::endl;
-        std::cerr << error << std::endl;
-        return false;
-    }
+    if(auto error = checkForLinkingErrors(program); error.size() != 0){
+         std::cerr << "LINKING ERROR" << std::endl;
+         std::cerr << error << std::endl;
+         return false;
+     }
 
     return true;
 }
