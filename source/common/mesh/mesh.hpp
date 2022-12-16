@@ -31,6 +31,42 @@ namespace our {
             //TODO: (Req 2) Write this function
             // remember to store the number of elements in "elementCount" since you will need it for drawing
             // For the attribute locations, use the constants defined above: ATTRIB_LOC_POSITION, ATTRIB_LOC_COLOR, etc
+            // Hint: Use the function glGenBuffers to generate a buffer
+            // Hint: Use the function glBindBuffer to bind the buffer
+            // Hint: Use the function glBufferData to send the data to the buffer
+            // Hint: Use the function glGenVertexArrays to generate a vertex array object
+            // Hint: Use the function glBindVertexArray to bind the vertex array object
+            // Hint: Use the function glEnableVertexAttribArray to enable the vertex attribute array
+            // Hint: Use the function glVertexAttribPointer to define how to read the vertex buffer
+            elementCount = elements.size();
+     
+            glGenVertexArrays(1, &VAO);
+            glBindVertexArray(VAO);
+
+            glGenBuffers(1, &VBO);
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+            
+            glVertexAttribPointer(ATTRIB_LOC_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),  (void *)offsetof(Vertex, position));
+            glEnableVertexAttribArray(ATTRIB_LOC_POSITION);
+
+            glVertexAttribPointer(ATTRIB_LOC_COLOR, 4, GL_UNSIGNED_BYTE, true, sizeof(Vertex), (void *)offsetof(Vertex, color));
+            glEnableVertexAttribArray(ATTRIB_LOC_COLOR);
+
+            glVertexAttribPointer(ATTRIB_LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_coord));
+            glEnableVertexAttribArray(ATTRIB_LOC_TEXCOORD);
+
+            glVertexAttribPointer(ATTRIB_LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+            glEnableVertexAttribArray(ATTRIB_LOC_NORMAL);
+
+            glGenBuffers(1, &EBO);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, elements.size() * sizeof(unsigned int), &elements[0], GL_STATIC_DRAW);
+
+             // unbinding the buffers
+            glBindVertexArray(0);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             
         }
 
@@ -38,11 +74,23 @@ namespace our {
         void draw() 
         {
             //TODO: (Req 2) Write this function
+            // Hint: Use the function glBindVertexArray to bind the vertex array object
+            // Hint: Use the function glDrawElements to draw the elements
+            glBindVertexArray(VAO);
+            glDrawElements(GL_TRIANGLES, elementCount, GL_UNSIGNED_INT, (void *)0);
+            glBindVertexArray(0);
+
         }
 
         // this function should delete the vertex & element buffers and the vertex array object
         ~Mesh(){
             //TODO: (Req 2) Write this function
+            // Hint: Use the function glDeleteBuffers to delete the buffers
+            // Hint: Use the function glDeleteVertexArrays to delete the vertex array object
+            glDeleteBuffers(1, &VBO);
+            glDeleteBuffers(1, &EBO);
+            glDeleteVertexArrays(1, &VAO);
+
         }
 
         Mesh(Mesh const &) = delete;
