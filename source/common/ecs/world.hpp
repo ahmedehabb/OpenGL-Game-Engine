@@ -67,8 +67,8 @@ namespace our {
             for (Entity* entity : entities){
                 delete entity;
             }
-            // at the end marked for removal could contain entities that are erased so we must clear it
             entities.clear();
+            // at the end marked for removal could contain entities that are erased so we must clear it
             markedForRemoval.clear();
         }
 
