@@ -21,5 +21,8 @@ CMakeSettings.json
 # Visual Studio Code specific files
 .vscode/
 
+# Scripts since its Os dependent , windows 7 you have to change argument from c="" to c""
+scripts/
+
 # Screenshots
 screenshots/
