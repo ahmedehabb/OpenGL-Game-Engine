@@ -108,6 +108,7 @@ namespace our {
             while(it != components.end()){
                 if (dynamic_cast<T*>(*it) != NULL && (*it) == component)
                 {
+                    delete *it;
                     components.erase(it);
                     return;
                 }
