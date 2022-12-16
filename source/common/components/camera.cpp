@@ -59,13 +59,14 @@ namespace our {
         // For the perspective camera, you can use glm::perspective
 
         // aspect ratio is x/y
-        float aspectRatio = viewportSize[0] / viewportSize[1];
+        float aspectRatio = (float)viewportSize[0] / viewportSize[1];
 
         if (this->cameraType == our::CameraType::ORTHOGRAPHIC)
         {
             // (this->fovY * aspectRatio) will give fovX which are all variations in the horizontal plane
             // so to get only left or right we will use (fovX/2)
-            float leftRightMagnitude = this->near * tan(this->fovY * aspectRatio / 2);
+            // float leftRightMagnitude = this->near * tan(this->fovY * aspectRatio / 2);
+            float leftRightMagnitude = this->orthoHeight * aspectRatio/2;
             // the left will be -ve * this magnitude, and right will be +ve * this magnitude
             return glm::ortho(-leftRightMagnitude, leftRightMagnitude, -(this->orthoHeight/2), (this->orthoHeight/2));
         } else
