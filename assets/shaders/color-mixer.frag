@@ -22,5 +22,11 @@ out vec4 frag_color;
 //You will need to declare 3 uniforms: red, green, blue.
 
 void main(){
-    frag_color = fs_in.color;
+    vec4 red = vec4(0.0, 1.0, 0.0, 0.0);
+    vec4 green = vec4(0.0, 0.0, 1.0, 0.0);
+    vec4 blue = vec4(1.0, 0.0, 0.0, 0.0);
+    frag_color.r = dot(red, vec4(fs_in.color, 1.0));
+    frag_color.g = dot(green, vec4(fs_in.color, 1.0));
+    frag_color.b = dot(blue, vec4(fs_in.color, 1.0));
+    frag_color.a = 1.0;
 }
