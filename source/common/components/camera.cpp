@@ -59,7 +59,7 @@ namespace our {
         // For the perspective camera, you can use glm::perspective
 
         // aspect ratio is x/y
-        float aspectRatio = (float)viewportSize[0] / viewportSize[1];
+        float aspectRatio = (float)viewportSize.x / viewportSize.y;
 
         if (this->cameraType == our::CameraType::ORTHOGRAPHIC)
         {
