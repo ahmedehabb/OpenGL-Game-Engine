@@ -14,7 +14,10 @@ uniform vec3 colors[2];
 void main(){
     //get the position of the current pixel
     //gl_FragCoord is a vec4 that contains the position of the current pixel in the window
-    vec2 pos = gl_FragCoord.xy;
+    //the first 2 components of gl_FragCoord are the x and y position of the current pixel
+    //ivec2 is a 2D integer vector that is used to store the position of the current pixel so that we can use it to calculate the color of the current pixel
+    //so that when we divide the x and y position of the current pixel by the size of tile, we get an integer value
+    ivec2 pos = ivec2(gl_FragCoord.xy);
     //get the color of the current pixel
     //the color of the current pixel is determined by the position of the pixel
     //if the sum of the x and y position of the pixel each divided by the size of tile is even, then the color is colors[0]
