@@ -249,6 +249,7 @@ namespace our {
                 //draw the triangle
             glBindVertexArray(postProcessVertexArray);
             glDrawArrays(GL_TRIANGLES, 0, 3);
+            glBindVertexArray(0);
             
         }
     }
