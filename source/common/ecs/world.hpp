@@ -32,6 +32,7 @@ namespace our {
             entity->world = this;
             // insert it in the suitable container
             entities.insert(entity);
+            // returns a pointer to that entity
             return entity;
         }
 
@@ -55,6 +56,9 @@ namespace our {
             //TODO: (Req 8) Remove and delete all the entities that have been marked for removal
             for (Entity* entity : markedForRemoval){
                 entities.erase(entity);
+                // Erase :: Removes from the vector container and calls its destructor 
+                // but If the contained object is a pointer it doesnt take ownership of destroying it.
+                // so we have to explicitly call delete on each contained pointer to delete the content
                 delete entity;
             }
             // at the end marked for removal contains all entities that are erased so we must clear it

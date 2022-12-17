@@ -64,8 +64,12 @@ namespace our {
         if (this->cameraType == our::CameraType::ORTHOGRAPHIC)
         {
             // (this->fovY * aspectRatio) will give fovX which are all variations in the horizontal plane
+            // we can use either techniques to get the leftRightMagnitude
             // so to get only left or right we will use (fovX/2)
             // float leftRightMagnitude = this->near * tan(this->fovY * aspectRatio / 2);
+
+            // or we can multiply orthoHeight* aspect ratio to get whole orthoWidth 
+            // then multiply by half to get just left or right wrt to origin
             float leftRightMagnitude = this->orthoHeight * aspectRatio/2;
             // the left will be -ve * this magnitude, and right will be +ve * this magnitude
             return glm::ortho(-leftRightMagnitude, leftRightMagnitude, -(this->orthoHeight/2), (this->orthoHeight/2));
