@@ -23,8 +23,10 @@ namespace our {
             // Hints: the sky will be draw after the opaque objects so we would need depth testing but which depth funtion should we pick?
             PipelineState skyPipelineState{};
             skyPipelineState.depthTesting.enabled = true;
-            skyPipelineState.depthTesting.function = GL_LEQUAL;
+            //IF WE changed depth function to GL_GEQUAL then the sky will be drawn above ground
+            skyPipelineState.depthTesting.function = GL_LEQUAL; 
             // We will draw the sphere from the inside, so what options should we pick for the face culling.
+            // we want to draw the sky from the inside, so we need to cull the front faces
             skyPipelineState.faceCulling.enabled = true;
             skyPipelineState.faceCulling.culledFace = GL_FRONT;
             
@@ -53,22 +55,29 @@ namespace our {
         // Then we check if there is a postprocessing shader in the configuration
         if(config.contains("postprocess")){
             //TODO: (Req 11) Create a framebuffer
+            //we need to create a framebuffer to render the scene to a texture
             glGenFramebuffers(1, &postprocessFrameBuffer);
+            //bind that frame buffer to be able to draw on it
             glBindFramebuffer(GL_FRAMEBUFFER, postprocessFrameBuffer);
             
             //TODO: (Req 11) Create a color and a depth texture and attach them to the framebuffer
             // Hints: The color format can be (Red, Green, Blue and Alpha components with 8 bits for each channel).
             // The depth format can be (Depth component with 24 bits).
+
+            //create a color texture to render the scene to it
             colorTarget = new Texture2D();
+            //bind the texture to be able to draw on it
             colorTarget->bind();
-        
+            //color texture needs to calculate the number of mipmaps using the formula: floor(log2(max(width, height))) + 1
             GLuint mip_levels = glm::floor(glm::log2(glm::max<float>(this->windowSize.x, this->windowSize.y))) + 1;
             glTexStorage2D(GL_TEXTURE_2D, mip_levels, GL_RGBA8, this->windowSize.x, this->windowSize.y);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTarget->getOpenGLName(), 0);
             
-
+            //create a depth texture to render the scene to it
             depthTarget = new Texture2D();
+            //bind the texture to be able to draw on it
             depthTarget->bind();
+            // The color texture will need mipmaps while the depth texture will only need 1 mip level.
             glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT24, this->windowSize.x, this->windowSize.y);
             // Depth only needs 1 mip level
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTarget->getOpenGLName(), 0);
@@ -77,6 +86,7 @@ namespace our {
             //check if frame buffer is complete
             if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
                 fprintf(stderr, "Framebuffer is not complete!");
+            //unbind the frame buffer
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             // Create a vertex array to use for drawing the texture
             glGenVertexArrays(1, &postProcessVertexArray);
@@ -177,32 +187,33 @@ namespace our {
         
 
         //TODO: (Req 9) Set the OpenGL viewport using viewportStart and viewportSize
-        // HINT: glViewport takes 4 parameters: x, y, width and height
+        //glViewport takes 4 parameters: x, y, width and height
         glViewport(0.0f, 0.0f,windowSize.x,windowSize.y);
         //TODO: (Req 9) Set the clear color to black and the clear depth to 1
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClearDepth(1.0f);
         //TODO: (Req 9) Set the color mask to true and the depth mask to true (to ensure the glClear will affect the framebuffer)
-        //TODO: (Req 9) understand this line and explain what it does
+        // glColorMask takes 4 parameters: red, green, blue and alpha and specifies whether the color buffer is enabled for writing or not
         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-        //TODO: (Req 9) understand this line and explain what it does
+        //we need to enable depth mask since we are using depth buffer
         glDepthMask(GL_TRUE);
 
         // If there is a postprocess material, bind the framebuffer
         if(postprocessMaterial){
             //TODO: (Req 11) bind the framebuffer
+            //bind the frame buffer to be able to use it
             glBindFramebuffer(GL_FRAMEBUFFER, postprocessFrameBuffer);
-            glViewport(0.0f, 0.0f,windowSize.x,windowSize.y);
         }
 
         //TODO: (Req 9) Clear the color and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //TODO: (Req 9) Draw all the opaque commands
         // Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
-        for (auto command : opaqueCommands) {
-            command.material->setup();
-            command.material->shader->set("transform", VP * command.localToWorld);
-            command.mesh->draw();
+        for (auto opaque : opaqueCommands) {
+            opaque.material->setup();
+            //multiply the VP matrix with the localToWorld matrix to get the model-view-projection matrix
+            opaque.material->shader->set("transform", VP * opaque.localToWorld);
+            opaque.mesh->draw();
         }
         // If there is a sky material, draw the sky
         if(this->skyMaterial){
@@ -231,10 +242,10 @@ namespace our {
         }
         //TODO: (Req 9) Draw all the transparent commands
         // Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
-        for (auto command : transparentCommands) {
-            command.material->setup();
-            command.material->shader->set("transform", VP * command.localToWorld);
-            command.mesh->draw();
+        for (auto transparent : transparentCommands) {
+            transparent.material->setup();
+            transparent.material->shader->set("transform", VP * transparent.localToWorld);
+            transparent.mesh->draw();
         }
 
         // If there is a postprocess material, apply postprocessing
@@ -244,9 +255,7 @@ namespace our {
             
             //TODO: (Req 11) Setup the postprocess material and draw the fullscreen triangle
             postprocessMaterial->setup();
-            //check if glDraw is initailized
-            
-                //draw the triangle
+            //bind vertex array to be able to draw
             glBindVertexArray(postProcessVertexArray);
             glDrawArrays(GL_TRIANGLES, 0, 3);
             

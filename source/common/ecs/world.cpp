@@ -9,6 +9,7 @@ namespace our {
         if(!data.is_array()) return;
         for(const auto& entityData : data){
             //TODO: (Req 8) Create an entity, make its parent "parent" and call its deserialize with "entityData".
+            // Create an entity using world funtion add which adds entity to entities list and adjust world pointer of entity
             Entity* currentEntity = World::add();
             currentEntity->parent = parent;
             currentEntity->deserialize(entityData);

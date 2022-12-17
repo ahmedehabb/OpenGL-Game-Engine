@@ -52,6 +52,8 @@ namespace our {
             // Return the component you found, or return null of nothing was found.
             auto it = components.begin();
             while(it != components.end()){
+                // used dynamic_cast<T*>(*it) != NULL as the bad cast check 
+                // could have used try and catch for the bad cast but this check satisfy our need 
                 if (dynamic_cast<T*>(*it) != NULL)
                 {
                     return dynamic_cast<T*>(*it);
@@ -108,7 +110,11 @@ namespace our {
             while(it != components.end()){
                 if (dynamic_cast<T*>(*it) != NULL && (*it) == component)
                 {
+                    // first deallocate the component
                     delete *it;
+                    // Erase :: Removes from the vector container and calls its destructor 
+                    // but If the contained object is a pointer it doesnt take ownership of destroying it.
+                    // so we have to explicitly call delete on each contained pointer to delete the content
                     components.erase(it);
                     return;
                 }
@@ -119,10 +125,7 @@ namespace our {
         // Since the entity owns its components, they should be deleted alongside the entity
         ~Entity(){
             //TODO: (Req 8) Delete all the components in "components".
-
-            // Removes from the vector container and calls its destructor 
-            // but If the contained object is a pointer it doesnt take ownership of destroying it.
-            // so we must delete it ourselves
+            // looping over every one and delete it manually then clear
             for (Component* component : components){
                 delete component;
             }
