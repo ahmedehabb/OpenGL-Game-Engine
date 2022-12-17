@@ -44,6 +44,7 @@ namespace our {
             //TODO: (Req 4) Write this function
             if(faceCulling.enabled){
                 /// now I am going to enable the face culling
+                //faceculling means that the object from acertain face will not be drawn if it is not seen by the camera for optimaiztion
                 glEnable(GL_CULL_FACE);
                 // choosing which face that will be culled grom the struct the culled face is the back face
                 glCullFace(faceCulling.culledFace);
@@ -56,7 +57,7 @@ namespace our {
                 glDisable(GL_CULL_FACE);
             }
             if(depthTesting.enabled){
-                // now i am going to enable the depth testing
+                // now i am going to enable the depth testing 
                 glEnable(GL_DEPTH_TEST);
                 // now i am going to choose the depth function what does it mean it means that i will draw the pixels if it is less or equal the already drawn one
                 glDepthFunc(depthTesting.function);

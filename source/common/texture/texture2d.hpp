@@ -14,7 +14,7 @@ namespace our {
             //TODO: (Req 5) Complete this function
             // this function will create a texture and save its name in the name variable
             //first parameter is the number of textures that i want to create
-            // second parameter is the pointer to the variable that will hold the name of the texture
+            // second parameter is the pointer to the variable that will hold the name of the texture pointer 
             glGenTextures(1, &name);
 
         };

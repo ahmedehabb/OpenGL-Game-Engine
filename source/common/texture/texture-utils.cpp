@@ -39,7 +39,8 @@ our::Texture2D* our::texture_utils::loadImage(const std::string& filename, bool 
     //here I binded the texture by creating a texture with the constuctor of the texture class
     //then I  binded the texture to the GL_TEXTURE_2D using bind function in the utils class
     texture->bind();
-    //here we could use 1 because there's no padding used in the image
+    //here i am telling opengl how to store the pixels in the vram
+    //here we could use 1 because there's no padding used in the image 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     //here we set the texture parameters
     //first parameter is the target which is GL_TEXTURE_2D

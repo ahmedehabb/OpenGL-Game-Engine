@@ -53,8 +53,9 @@ namespace our {
             //TODO: (Req 6) Complete this function
             // this function will set the sampler parameter
             // first parameter is the name of the sampler that i want to set the parameter for
-            // second parameter is the parameter that i want to set
-            // third parameter is the value of the parameter that i want to set
+            // second parameter is the parameter that i want to sett
+            //paramter could be GL_MIn filter or GL_MAG filter or GL_WRAP_S or GL_WRAP_T
+            // value parameter is the value of the parameter that could be GL_NEAREST or GL_LINEAR or GL_REPEAT or GL_CLAMP_TO_EDGE
             glSamplerParameteri(name, parameter, value);
         }
 

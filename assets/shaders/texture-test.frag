@@ -16,6 +16,8 @@ void main(){
     // from the texture at the received texture coordinates
     //here you are getting the the texture of the object and the texture coordinates of the object
     //here I pass the coodrinates of the texture it self(with respect to the texture normalized from 0-1 on the s,t axes)
+    //here i am gettting the color of the texture at my screen mapped to the textures coordinates
+    //here I pass the coodrinates of the texture it self(with respect to the texture normalized from 0-1 on the s,t axes
     frag_color = texture(tex, fs_in.tex_coord);
 
 
