@@ -19,7 +19,7 @@ void main(){
     // while the texture coordinate space ranges from 0 to 1
     // 0-1 --> 0-2  --> -1-1
     vec2 ndc_coord = (tex_coord * 2) -1;
-    float squaredDistance = sqrt(pow(ndc_coord.x , 2.0) + pow(ndc_coord.y, 2.0));
+    float squaredDistance = pow(ndc_coord.x , 2.0) + pow(ndc_coord.y, 2.0);
     // We have the pixel's texture coordinate, how can we compute its location in the NDC space?
     frag_color = texture(tex, tex_coord) / (1 + squaredDistance);    
 }

@@ -55,7 +55,7 @@ namespace our {
             //TODO: (Req 11) Create a framebuffer
             glGenFramebuffers(1, &postprocessFrameBuffer);
             glBindFramebuffer(GL_FRAMEBUFFER, postprocessFrameBuffer);
-
+            
             //TODO: (Req 11) Create a color and a depth texture and attach them to the framebuffer
             // Hints: The color format can be (Red, Green, Blue and Alpha components with 8 bits for each channel).
             // The depth format can be (Depth component with 24 bits).
@@ -65,14 +65,14 @@ namespace our {
             GLuint mip_levels = glm::floor(glm::log2(glm::max<float>(this->windowSize.x, this->windowSize.y))) + 1;
             glTexStorage2D(GL_TEXTURE_2D, mip_levels, GL_RGBA8, this->windowSize.x, this->windowSize.y);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTarget->getOpenGLName(), 0);
-            colorTarget->unbind();
+            
 
             depthTarget = new Texture2D();
             depthTarget->bind();
             glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT24, this->windowSize.x, this->windowSize.y);
             // Depth only needs 1 mip level
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTarget->getOpenGLName(), 0);
-            depthTarget->unbind();
+            
             //TODO: (Req 11) Unbind the framebuffer just to be safe
             //check if frame buffer is complete
             if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -80,7 +80,7 @@ namespace our {
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             // Create a vertex array to use for drawing the texture
             glGenVertexArrays(1, &postProcessVertexArray);
-
+            
             // Create a sampler to use for sampling the scene texture in the post processing shader
             Sampler* postprocessSampler = new Sampler();
             postprocessSampler->set(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -192,6 +192,7 @@ namespace our {
         if(postprocessMaterial){
             //TODO: (Req 11) bind the framebuffer
             glBindFramebuffer(GL_FRAMEBUFFER, postprocessFrameBuffer);
+            glViewport(0.0f, 0.0f,windowSize.x,windowSize.y);
         }
 
         //TODO: (Req 9) Clear the color and depth buffers
@@ -244,10 +245,11 @@ namespace our {
             //TODO: (Req 11) Setup the postprocess material and draw the fullscreen triangle
             postprocessMaterial->setup();
             //check if glDraw is initailized
-            if(glDrawArrays){
+            
                 //draw the triangle
-                glDrawArrays(GL_TRIANGLES, 0, 3);
-            }
+            glBindVertexArray(postProcessVertexArray);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+            
         }
     }
 
