@@ -25,7 +25,8 @@ namespace our {
             skyPipelineState.depthTesting.enabled = true;
             skyPipelineState.depthTesting.function = GL_LEQUAL;
             // We will draw the sphere from the inside, so what options should we pick for the face culling.
-            skyPipelineState.faceCulling.enabled = false;
+            skyPipelineState.faceCulling.enabled = true;
+            skyPipelineState.faceCulling.culledFace = GL_FRONT;
             
             // Load the sky texture (note that we don't need mipmaps since we want to avoid any unnecessary blurring while rendering the sky)
             std::string skyTextureFile = config.value<std::string>("sky", "");
@@ -58,20 +59,24 @@ namespace our {
             //TODO: (Req 11) Create a color and a depth texture and attach them to the framebuffer
             // Hints: The color format can be (Red, Green, Blue and Alpha components with 8 bits for each channel).
             // The depth format can be (Depth component with 24 bits).
-            GLuint color, depth;
-            glGenTextures(1, &color);
-            glBindTexture(GL_TEXTURE_2D, color);
+            colorTarget = new Texture2D();
+            colorTarget->bind();
+        
             GLuint mip_levels = glm::floor(glm::log2(glm::max<float>(this->windowSize.x, this->windowSize.y))) + 1;
             glTexStorage2D(GL_TEXTURE_2D, mip_levels, GL_RGBA8, this->windowSize.x, this->windowSize.y);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
-            
-            glGenTextures(1, &depth);
-            glBindTexture(GL_TEXTURE_2D, depth);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTarget->getOpenGLName(), 0);
+            colorTarget->unbind();
+
+            depthTarget = new Texture2D();
+            depthTarget->bind();
             glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT24, this->windowSize.x, this->windowSize.y);
             // Depth only needs 1 mip level
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth, 0);
-            
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTarget->getOpenGLName(), 0);
+            depthTarget->unbind();
             //TODO: (Req 11) Unbind the framebuffer just to be safe
+            //check if frame buffer is complete
+            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+                fprintf(stderr, "Framebuffer is not complete!");
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             // Create a vertex array to use for drawing the texture
             glGenVertexArrays(1, &postProcessVertexArray);
@@ -238,7 +243,11 @@ namespace our {
             
             //TODO: (Req 11) Setup the postprocess material and draw the fullscreen triangle
             postprocessMaterial->setup();
-            postprocessMaterial->shader->use();
+            //check if glDraw is initailized
+            if(glDrawArrays){
+                //draw the triangle
+                glDrawArrays(GL_TRIANGLES, 0, 3);
+            }
         }
     }
 
