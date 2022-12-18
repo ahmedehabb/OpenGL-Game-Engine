@@ -8,9 +8,9 @@ namespace our {
     // This function should setup the pipeline state and set the shader to be used
     void Material::setup() const {
         //TODO: (Req 7) Write this function
-        // setup the pipeline state 
+        // setup the pipeline state which will set faceCulling, depthTesting, blending of the pipeline state
         this->pipelineState.setup();
-        // set the shader to be used
+        // set the shader to be used 
         this->shader->use();
     }
 
@@ -34,7 +34,7 @@ namespace our {
         Material::setup();
         
         // set the "tint" uniform to the value in the member variable tint 
-        // uniform vec4 tint;
+        // which is the uniform vec4 tint in the shader;
         this->shader->set("tint", this->tint);
     }
 
@@ -59,19 +59,26 @@ namespace our {
 
         // Then it should bind the texture and sampler to a texture unit and send the unit number to the uniform variable "tex" 
         // we can use the first one since the shader has only this one transform and we dont need to add to GL_TEXTURE0
-        // i also made textureUnitIndex to keep it dynamic if we needed to change the texture unit after some time
+        
+        
+        // First, we set the active texture unit.
+        // Here, we pick unit 0 which is actually the active unit by default but we still wrote this line for demonstration.
+        // made textureUnitIndex to keep it dynamic if we needed to change the texture unit after some time instead of passing 0
         int textureUnitIndex = 0;
-        glActiveTexture(GL_TEXTURE0 + textureUnitIndex); 
+        glActiveTexture(GL_TEXTURE0 + textureUnitIndex);
+
+        // added this check for nullptrs of both the texture and sampler since they could crash game where they arent still initialized
         if (texture == nullptr || sampler == nullptr)
         {
             return ;
         }
         
-        // binding the texture to the active unit of the texture units
+        // binding the texture, we also bind it to the active unit. So this texture is now bound to unit 0.
         this->texture->bind();
-        // bind the sampler to the same texture unit index where the texture is binderd
+        // bind the sampler to the same texture unit index where the texture is binded
         this->sampler->bind(textureUnitIndex);
-        // send the unit number to the uniform variable "tex" 
+        // send the unit number to the uniform variable "tex" which is
+        // uniform sampler2D tex;
         this->shader->set("tex", textureUnitIndex);
     }
 

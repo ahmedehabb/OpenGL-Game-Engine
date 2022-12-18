@@ -37,6 +37,7 @@ namespace our {
         // then you can use glm::lookAt
         
         // point or vector transformed by matrix M = M * (vector/point) 
+        // by multiplying the transformation matrix from the left
         
         // since eye and center are points so we add 1 to them as homogenous component
         glm::vec4 eyeTransformed = M * glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f);
