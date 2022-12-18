@@ -69,9 +69,15 @@ namespace our {
             // will get half of it to assign them to left and right , will only change sign
             float leftRightMagnitude = this->orthoHeight * aspectRatio/2;
             // the left will be -ve * this magnitude, and right will be +ve * this magnitude
+
+            // glm::ortho(T left, T right, T bottom, T top)
+            // Creates a matrix for projecting two-dimensional coordinates onto the screen.
             return glm::ortho(-leftRightMagnitude, leftRightMagnitude, -(this->orthoHeight/2), (this->orthoHeight/2));
         } else
         {
+            // glm::perspective(fov, aspect, near, far);
+            // glm::perspective creates a 4x4 perspective projection matrix that is used in a shader
+            // (typically, vertex shader) to transform points.
             return glm::perspective(this->fovY,aspectRatio,this->near,this->far);
         }
     }
