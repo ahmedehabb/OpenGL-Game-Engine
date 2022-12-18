@@ -46,6 +46,7 @@ namespace our {
         void markForRemoval(Entity* entity){
             //TODO: (Req 8) If the entity is in this world, add it to the "markedForRemoval" set.
             if(entities.find(entity) != entities.end()){
+                // therefore the entity is found successfully so insert it in markedForRemoval
                 markedForRemoval.insert(entity);
             }
         }
@@ -55,6 +56,7 @@ namespace our {
         void deleteMarkedEntities(){
             //TODO: (Req 8) Remove and delete all the entities that have been marked for removal
             for (Entity* entity : markedForRemoval){
+                // erase entity
                 entities.erase(entity);
                 // Erase :: Removes from the vector container and calls its destructor 
                 // but If the contained object is a pointer it doesnt take ownership of destroying it.
@@ -69,8 +71,10 @@ namespace our {
         void clear(){
             //TODO: (Req 8) Delete all the entites and make sure that the containers are empty
             for (Entity* entity : entities){
+                // delete each entity in entities list  
                 delete entity;
             }
+            // clear entities list at the end
             entities.clear();
             // at the end marked for removal could contain entities that are erased so we must clear it
             markedForRemoval.clear();

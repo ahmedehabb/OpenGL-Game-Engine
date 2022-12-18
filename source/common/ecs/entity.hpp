@@ -85,6 +85,7 @@ namespace our {
             
             // find the first component that can be dynamically cast to "T*".
             T* firstFound = getComponent<T*>();
+            // if its not null , which is successfull dynamic cast or found
             if(firstFound){
                 // reuse function deleteComponent which take T* and delete it
                 deleteComponent<T*>(firstFound);
@@ -125,10 +126,12 @@ namespace our {
         // Since the entity owns its components, they should be deleted alongside the entity
         ~Entity(){
             //TODO: (Req 8) Delete all the components in "components".
+            
             // looping over every one and delete it manually then clear
             for (Component* component : components){
                 delete component;
             }
+            // clear at the end of components 
             components.clear();
         }
 

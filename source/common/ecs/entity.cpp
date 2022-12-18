@@ -27,6 +27,7 @@ namespace our {
             // go up one level
             current = current->parent;
         }
+        // return localToWorld Matrix
         return localToWorld;
     }
 
