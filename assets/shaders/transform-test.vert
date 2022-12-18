@@ -16,6 +16,10 @@ uniform mat4 transform;
 
 void main(){
     //TODO: (Req 3) Change the next line to apply the transformation matrix
+    // to the vertex position
+    //so gl_position contains the transformed vertex position
+    //we add 1.0 to the position vector to make it a vec4 with w=1.0 as required by the transform matrix and it is a point
+    //if it was a vector we would add 0.0 to the w component
     gl_Position = transform * vec4(position, 1.0);
     // No need to change any of the following lines
     vs_out.position = position;

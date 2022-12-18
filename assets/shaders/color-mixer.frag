@@ -9,6 +9,10 @@ in Varyings {
 
 out vec4 frag_color;
 
+//TODO: (Req 1) Declare 3 uniforms: red, green, blue. Each of these will be a vec4.
+//The red uniform will be used to mix the red channel, the green uniform will be used
+//to mix the green channel, and the blue uniform will be used to mix the blue channel.
+//The red, green, and blue uniforms will be used to apply a color matrix to the vertex
 uniform vec4 red = vec4(1.0, 0.0, 0.0, 0.0);
 uniform vec4 green = vec4(0.0, 1.0, 0.0, 0.0);
 uniform vec4 blue = vec4(0.0, 0.0, 1.0, 0.0);
@@ -26,6 +30,8 @@ uniform vec4 blue = vec4(0.0, 0.0, 1.0, 0.0);
 //You will need to declare 3 uniforms: red, green, blue.
 
 void main(){
+    //this is the line that we want to simplify using the dot function
+    //red.rgb will return vec3 with red.r , red.g , red.b and then apply dot product
     frag_color.r = dot(red.rgb, fs_in.color) + red.a;
     frag_color.g = dot(green.rgb, fs_in.color) + green.a;
     frag_color.b = dot(blue.rgb, fs_in.color) + blue.a;

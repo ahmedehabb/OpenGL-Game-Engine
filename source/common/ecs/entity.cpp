@@ -19,6 +19,10 @@ namespace our {
         // loop till parent is null (root)
         while(current){
             // multiply the current localTransform from the left to preserve order
+            // since to go from leaf to root
+            // we do M1 * P to go up one level relative to parent
+            // then to go up one more level again we multiply by M2 the same way
+            // M2 * (M1 * P) and so on ..
             localToWorld = current->localTransform.toMat4() * localToWorld;
             // go up one level
             current = current->parent;

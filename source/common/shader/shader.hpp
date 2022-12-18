@@ -20,14 +20,14 @@ namespace our {
             //TODO: (Req 1) Create A shader program
             //Hint: Use the function glCreateProgram to create a shader program
             //Hint: The function glCreateProgram returns a GLuint which is the shader program
+            //the fuction glCreateProgram returns a GLuint which is the shader program and it is not equal to 0
             program = glCreateProgram();         
         }
         ~ShaderProgram(){
             //TODO: (Req 1) Delete a shader program
             //Hint: Use the function glDeleteProgram to delete the shader program
             //Hint: The function glDeleteProgram takes a GLuint which is the shader program
-            if(program != 0) 
-                glDeleteProgram(program);
+            glDeleteProgram(program);
         }
 
         bool attach(const std::string &filename, GLenum type) const;
@@ -109,7 +109,8 @@ namespace our {
             //Hint: Use the function glUniformMatrix4fv because we will send a 4x4 matrix
             //Hint: Use the function getUniformLocation to get the location of the uniform
             //Hint: Use the function glm::value_ptr to get the pointer to the first element of the matrix
-            //glUniformMatrix4fv(the location of the uniform, number of matrices, transpose, pointer to the first element of the matrix);
+            //glUniformMatrix4fv(the location of the uniform, number of matrices, transpose Specifies whether to transpose the matrix as the values are loaded into the uniform variable.,
+            //pointer to the first element of the matrix);
             glUniformMatrix4fv(getUniformLocation(uniform), 1, GL_FALSE, glm::value_ptr(matrix));
         }
 
@@ -117,6 +118,9 @@ namespace our {
         //Hint: Use the keyword delete
         //Question: Why do we delete the copy constructor and assignment operator?
         //Answer: Because we don't want to copy the shader program because it is a resource that we want to be unique
+        //Resource Acquisition Is Initialization (RAII)
+        //and also if we copy the shader program we will have two shader programs with the same id which is not good
+        //as when we delete the shader program, the one that is copied will cause an error because that id is already deleted
         ShaderProgram(const ShaderProgram&) = delete;
         ShaderProgram& operator=(const ShaderProgram&) = delete;
     };
