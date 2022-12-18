@@ -62,6 +62,11 @@ namespace our {
         // i also made textureUnitIndex to keep it dynamic if we needed to change the texture unit after some time
         int textureUnitIndex = 0;
         glActiveTexture(GL_TEXTURE0 + textureUnitIndex); 
+        if (texture == nullptr || sampler == nullptr)
+        {
+            return ;
+        }
+        
         // binding the texture to the active unit of the texture units
         this->texture->bind();
         // bind the sampler to the same texture unit index where the texture is binderd
