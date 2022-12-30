@@ -215,7 +215,7 @@ namespace our {
             opaque.material->shader->set("transform", VP * opaque.localToWorld);
             opaque.mesh->draw();
         }
-        // If there is a sky material, draw the sky
+        // If there is a sky material, draw the sky 
         if(this->skyMaterial){
             //TODO: (Req 10) setup the sky material
             this->skyMaterial->setup();
@@ -224,7 +224,7 @@ namespace our {
             //TODO: (Req 10) Create a model matrix for the sky such that it always follows the camera (sky sphere center = camera position)
 
             // then we will need the VP matrix to be converted into ndc space
-            glm::mat4 skyModelMatrix = VP * cameraTransform;
+            glm::mat4 skyModelMatrix =glm::translate(VP ,glm::vec3(cameraTransform[3]));
             
             //TODO: (Req 10) We want the sky to be drawn behind everything (in NDC space, z=1)
             // We can acheive the is by multiplying by an extra matrix after the projection but what values should we put in it?
