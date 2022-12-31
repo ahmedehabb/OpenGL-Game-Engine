@@ -2,7 +2,6 @@
 #include "../ecs/component.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtx/hash.hpp>
-
 namespace our {
 
     //we made an enum called light type that defines the type of light

@@ -11,8 +11,8 @@
     },
     "scene": {
         "renderer":{
-            "sky": "assets/textures/sky.jpg",
-            "postprocess": "assets/shaders/postprocess/vignette.frag"
+            // "sky": "assets/textures/sky.jpg",
+            // "postprocess": "assets/shaders/postprocess/vignette.frag"
         },
         "assets":{
             "shaders":{
@@ -301,49 +301,79 @@
             //         }
             //     ]
             // },
-            {
-                "position": [0, 10, 0],
-                "rotation": [45, 45, 0],
-                "scale": [5, 5, 5],
-                "components": [
-                    {
-                        "type": "Mesh Renderer",
-                        "mesh": "sphere",
-                        "material": "moon"
-                    },
-                    {
-                        "type": "Movement",
-                        "angularVelocity": [0, 90, 0]
-                    }
+            // {
+            //     "position": [0, 10, 0],
+            //     "rotation": [45, 45, 0],
+            //     "scale": [5, 5, 5],
+            //     "components": [
+            //         {
+            //             "type": "Mesh Renderer",
+            //             "mesh": "sphere",
+            //             "material": "moon"
+            //         },
+            //         {
+            //             "type": "Movement",
+            //             "angularVelocity": [0, 90, 0]
+            //         }
 
-                ]
+            //     ]
                 
-            },
+            // },
             {
-                "position": [ 0, 1, 0 ],
-                "scale":[ 3,3, 3],
+                "position": [ 0, -2, -5 ],
+                "scale":[ 1,1, 1],
                 "name": "point light",
                 "components": [
                     {
                         "type": "Light",
-                        "lightType": "point",
+                        "lightType": "spot",
                         "color": [ 0.1, 0.1, 0.3 ],
                         "attenuation": [ 0, 0, 0.2 ],
-                        "direction": [ 0, -1.0, 0 ],
+                        "direction": [ 0, -1.0, -1 ],
                         "cone-angels": [ 15.0, 30.0 ]
                     }
                 ]
             },
+            //     {
+            //     "position": [ 0, 1, 0 ],
+            //     "scale":[ 3,3, 3],
+            //     "name": "spot light",
+            //     "components": [
+            //         {
+            //             "type": "Light",
+            //             "lightType": "spot",
+            //             "color": [ 0.1, 0.1, 0.3 ],
+            //             "attenuation": [ 0, 0, 0.2 ],
+            //             "direction": [ 0, -1.0, 0 ],
+            //             "cone-angels": [ 15.0, 30.0 ]
+
+            //         }
+            //     ]
+            // },
+            // {
+            //     "position": [ 0, 3, -5 ],
+            //     "name": "sun",
+            //     "components": [
+            //         {
+            //             "type": "Light",
+            //             "lightType": "directional",
+            //             "color": [ 1, 1, 1 ],
+            //             "attenuation": [ 0, 0, 0 ],
+            //             "direction": [ -1.0, 0, 0 ],
+            //             "cone-angels": [ 15.0, 30.0 ]
+            //         }
+            //     ]
+            // }
             {
-                "position": [ 0, -3, -5 ],
+                "position": [ 3, 1, 1 ],
                 "name": "sun",
                 "components": [
                     {
                         "type": "Light",
                         "lightType": "directional",
-                        "color": [ 1, 1, 1 ],
-                        "attenuation": [ 0, 0, 0 ],
-                        "direction": [ -1.0, 0, 0 ],
+                        "color": [ 0.1, 0.1, 0.3 ],
+                        "attenuation": [ 0, 0, 0.1 ],
+                        "direction": [ 0, -0.8, 0 ],
                         "cone-angels": [ 15.0, 30.0 ]
                     }
                 ]

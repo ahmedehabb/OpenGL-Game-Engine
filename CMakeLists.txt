@@ -35,6 +35,7 @@ set(COMMON_SOURCES
         source/common/application.cpp
         source/common/input/keyboard.hpp
         source/common/input/mouse.hpp
+       
 
         source/common/asset-loader.cpp
         source/common/asset-loader.hpp
@@ -78,6 +79,12 @@ set(COMMON_SOURCES
         source/common/components/movement.hpp
         source/common/components/movement.cpp
         source/common/components/component-deserializer.hpp
+        source/common/components/light.hpp
+        source/common/components/light.cpp
+        source/common/components/player-movement.hpp
+        source/common/components/player-movement.cpp
+        source/common/components/collision.hpp
+        source/common/components/collision.cpp
 
         source/common/systems/forward-renderer.hpp
         source/common/systems/forward-renderer.cpp

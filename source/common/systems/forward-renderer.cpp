@@ -1,6 +1,7 @@
 #include "forward-renderer.hpp"
 #include "../mesh/mesh-utils.hpp"
 #include "../texture/texture-utils.hpp"
+#include <iostream>
 namespace our {
 
     void ForwardRenderer::initialize(glm::ivec2 windowSize, const nlohmann::json& config){
@@ -143,6 +144,10 @@ namespace our {
         opaqueCommands.clear();
         transparentCommands.clear();
         for(auto entity : world->getEntities()){
+            if (auto light = entity->getComponent<LightComponent>())
+            {
+					lights.push_back(light);
+            }
             // If we hadn't found a camera yet, we look for a camera in this entity
             if(!camera) camera = entity->getComponent<CameraComponent>();
             // If this entity has a mesh renderer component
@@ -153,6 +158,7 @@ namespace our {
                 command.center = glm::vec3(command.localToWorld * glm::vec4(0, 0, 0, 1));
                 command.mesh = meshRenderer->mesh;
                 command.material = meshRenderer->material;
+
                 // if it is transparent, we add it to the transparent commands list
                 if(command.material->transparent){
                     transparentCommands.push_back(command);
@@ -284,11 +290,14 @@ namespace our {
         shader->set("light_count", (int)lights.size());
         int light_index = 0;
         const int MAX_LIGHT_COUNT = 8;
-        shader->set("sky_light.sky", glm::vec3(0.2, 0.6, 0.8));
-	    shader->set("sky_light.horizon", glm::vec3(0.5, 0.5, 0.5));
-	    shader->set("sky_light.ground", glm::vec3(0.2, 0.7, 0.4));
+        // shader->set("sky_light.sky", glm::vec3(0.2, 0.6, 0.8));
+	    // shader->set("sky_light.horizon", glm::vec3(0.5, 0.5, 0.5));
+        // std::cout<<"sky light"<<std::endl;
+	    // shader->set("sky_light.ground", glm::vec3(0.2, 0.7, 0.4));
+        
+
         for (const auto &light : lights)
-        {
+        { std::cout<<"loop"<<std::endl;
             std::string prefix = "lights[" + std::to_string(light_index) + "].";
             shader->set(prefix + "type", static_cast<int>(light->type));
 
@@ -297,9 +306,11 @@ namespace our {
             switch (light->type)
             {
             case LightType::DIRECTIONAL:
-                shader->set(prefix + "direction", glm::normalize(light->getOwner()->getLocalToWorldMatrix() * glm::vec4(light->direction, 1)));
+                std::cout<<"directional light"<<std::endl;
+                shader->set(prefix + "direction", glm::normalize(light->getOwner()->getLocalToWorldMatrix() * glm::vec4(light->direction, 0)));
                 break;
             case LightType::POINT:
+                std::cout<<"point light"<<std::endl;
                 glm::vec4 light4 = light->getOwner()->getLocalToWorldMatrix() * glm::vec4(light->getOwner()->localTransform.position, 1);
                 shader->set(prefix + "position", glm::vec3(light4));
                 shader->set(prefix + "attenuation", light->attenuation);
@@ -307,7 +318,7 @@ namespace our {
             case LightType::SPOT:
                 glm::vec4 Slight = light->getOwner()->getLocalToWorldMatrix() * glm::vec4(light->getOwner()->localTransform.position, 1);
                 shader->set(prefix + "position", glm::vec3(Slight));
-                shader->set(prefix + "direction", glm::normalize(light->getOwner()->getLocalToWorldMatrix() * glm::vec4(light->direction, 1)));
+                shader->set(prefix + "direction", glm::normalize(light->getOwner()->getLocalToWorldMatrix() * glm::vec4(light->direction, 0)));
                 shader->set(prefix + "attenuation", light->attenuation);
                 shader->set(prefix + "cone_angles", glm::vec2(glm::radians(light->cone_angles[0]), glm::radians(light->cone_angles[1])));
                 break;
