@@ -1,7 +1,6 @@
 #include "forward-renderer.hpp"
 #include "../mesh/mesh-utils.hpp"
 #include "../texture/texture-utils.hpp"
-
 namespace our {
 
     void ForwardRenderer::initialize(glm::ivec2 windowSize, const nlohmann::json& config){
@@ -10,7 +9,9 @@ namespace our {
 
         // Then we check if there is a sky texture in the configuration
         if(config.contains("sky")){
-            // First, we create a sphere which will be used to draw the sky
+          
+          
+          // First, we create a sphere which will be used to draw the sky
             this->skySphere = mesh_utils::sphere(glm::ivec2(16, 16));
             
             // We can draw the sky using the same shader used to draw textured objects
@@ -209,11 +210,23 @@ namespace our {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //TODO: (Req 9) Draw all the opaque commands
         // Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
+    
         for (auto opaque : opaqueCommands) {
+            
             opaque.material->setup();
             //multiply the VP matrix with the localToWorld matrix to get the model-view-projection matrix
-            opaque.material->shader->set("transform", VP * opaque.localToWorld);
+            opaque.material->shader->set("transform",  opaque.localToWorld);
+            //calculate the light for opaque objects
+            opaque.material->shader->set("object_to_world", opaque.localToWorld);
+            opaque.material->shader->set("object_to_world_inv_transpose", glm::transpose(glm::inverse(opaque.localToWorld)));
+            opaque.material->shader->set("view_projection", VP);
+            opaque.material->shader->set("camera_position", camera->getOwner()->getLocalToWorldMatrix()* glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f));
+
+            setLightShaders(opaque.material->shader);
+
+
             opaque.mesh->draw();
+            
         }
         // If there is a sky material, draw the sky 
         if(this->skyMaterial){
@@ -244,8 +257,13 @@ namespace our {
         // Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
         for (auto transparent : transparentCommands) {
             transparent.material->setup();
-            transparent.material->shader->set("transform", VP * transparent.localToWorld);
+            transparent.material->shader->set("object_to_world", transparent.localToWorld);
+            transparent.material->shader->set("object_to_world_inv_transpose", glm::transpose(glm::inverse(transparent.localToWorld)));
+            transparent.material->shader->set("view_projection", VP);
+            transparent.material->shader->set("camera_position", camera->getOwner()->getLocalToWorldMatrix()* glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f));
+            setLightShaders(transparent.material->shader);
             transparent.mesh->draw();
+
         }
 
         // If there is a postprocess material, apply postprocessing
@@ -258,7 +276,46 @@ namespace our {
             //bind vertex array to be able to draw
             glBindVertexArray(postProcessVertexArray);
             glDrawArrays(GL_TRIANGLES, 0, 3);
+
             
+        }
+    }
+    void ForwardRenderer::setLightShaders(ShaderProgram *shader)
+    {
+        shader->set("light_count", (int)lights.size());
+        int light_index = 0;
+        const int MAX_LIGHT_COUNT = 8;
+        shader->set("sky_light.sky", glm::vec3(0.2, 0.6, 0.8));
+	    shader->set("sky_light.horizon", glm::vec3(0.5, 0.5, 0.5));
+	    shader->set("sky_light.ground", glm::vec3(0.2, 0.7, 0.4));
+        for (const auto &light : lights)
+        {
+            std::string prefix = "lights[" + std::to_string(light_index) + "].";
+            shader->set(prefix + "type", static_cast<int>(light->type));
+
+            shader->set(prefix + "color", glm::normalize(light->color));
+
+            switch (light->type)
+            {
+            case LightType::DIRECTIONAL:
+                shader->set(prefix + "direction", glm::normalize(light->getOwner()->getLocalToWorldMatrix() * glm::vec4(light->direction, 1)));
+                break;
+            case LightType::POINT:
+                glm::vec4 light4 = light->getOwner()->getLocalToWorldMatrix() * glm::vec4(light->getOwner()->localTransform.position, 1);
+                shader->set(prefix + "position", glm::vec3(light4));
+                shader->set(prefix + "attenuation", light->attenuation);
+                break;
+            case LightType::SPOT:
+                glm::vec4 Slight = light->getOwner()->getLocalToWorldMatrix() * glm::vec4(light->getOwner()->localTransform.position, 1);
+                shader->set(prefix + "position", glm::vec3(Slight));
+                shader->set(prefix + "direction", glm::normalize(light->getOwner()->getLocalToWorldMatrix() * glm::vec4(light->direction, 1)));
+                shader->set(prefix + "attenuation", light->attenuation);
+                shader->set(prefix + "cone_angles", glm::vec2(glm::radians(light->cone_angles[0]), glm::radians(light->cone_angles[1])));
+                break;
+            }
+            light_index++;
+            if (light_index >= MAX_LIGHT_COUNT)
+                break;
         }
     }
 

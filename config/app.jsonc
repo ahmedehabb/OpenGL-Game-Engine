@@ -2,7 +2,7 @@
     "start-scene": "menu",
     "window":
     {
-        "title":"Default Game Window",
+        "title":"Crazy Taxi",
         "size":{
             "width":1280,
             "height":720
@@ -16,13 +16,17 @@
         },
         "assets":{
             "shaders":{
-                "tinted":{
-                    "vs":"assets/shaders/tinted.vert",
-                    "fs":"assets/shaders/tinted.frag"
+                "lit-textured":{
+                    "vs":"assets/shaders/lit-textured.vert",
+                    "fs":"assets/shaders/lit-textured.frag"
                 },
                 "textured":{
                     "vs":"assets/shaders/textured.vert",
                     "fs":"assets/shaders/textured.frag"
+                },
+                "tinted":{
+                    "vs":"assets/shaders/tinted.vert",
+                    "fs":"assets/shaders/tinted.frag"
                 }
             },
             "textures":{
@@ -33,6 +37,7 @@
                 "monkey": "assets/textures/monkey.png",
                 "road": "assets/textures/road.jpg",
                 "car": "assets/textures/car.png"
+
             },
             "meshes":{
                 "cube": "assets/models/cube.obj",
@@ -114,8 +119,8 @@
                     "sampler": "default"
                 },
                 "moon":{
-                    "type": "textured",
-                    "shader": "textured",
+                    "type": "lit",
+                    "shader": "lit-textured",
                     "pipelineState": {
                         "faceCulling":{
                             "enabled": false
@@ -124,8 +129,12 @@
                             "enabled": true
                         }
                     },
-                    "tint": [1, 1, 1, 1],
                     "texture": "moon",
+                    "albedo-texture": "moon",
+                    "specular-texture": "moon",
+                    "roughness-texture": "moon",
+                    "ambient-occlusion-texture": "moon",
+                    "emission-texture": "moon",
                     "sampler": "default"
                 },
                 "road":{
