@@ -98,36 +98,111 @@ namespace our {
         // First, we set the active texture unit. 
         // Here, we pick unit 0 which is actually the active unit by default but we still wrote this line for demonstration.
         glActiveTexture(GL_TEXTURE0);
-        // When we bind the texture, we also bind it to the active unit. So this texture is now bound to unit 0.
-        albedo_tex->bind();
+        if(albedo_tex)
+        {   // When we bind the texture, we also bind it to the active unit. So this texture is now bound to unit 0.
+            albedo_tex->bind();
+        }
+        else
+        {
+            albedo_tex->unbind();
+    }
+        
         // To tell OpenGL which sampler object we will use for this unit,
         // we bind the sampler to unit 0 (which is specified by the 1st parameter of the following function).
-        sampler->bind(0);
-        // send the unit number to the uniform variable "material.albedo"
+        if(sampler)
+        {  // send the unit number to the uniform variable "material.albedo"
+            sampler->bind(0);
+        }
+        else
+        {
+            sampler->unbind(0);
+        }
+    
+        
         shader->set("material.albedo", 0);
         // ---------- specular tex ------------ //
         // Here, we pick unit 1.
         glActiveTexture(GL_TEXTURE1);
         // When we bind the texture, we also bind it to the active unit. So this texture is now bound to unit 1.
-        specular_tex->bind();
-        // we bind the sampler to unit 1 (which is specified by the 1st parameter of the following function).
-        sampler->bind(1);
+        if(specular_tex)
+        {  
+            specular_tex->bind();
+        }
+        else
+        {
+            specular_tex->unbind();
+        }
+
+        if(sampler)
+        {  // we bind the sampler to unit 1 (which is specified by the 1st parameter of the following function).
+            sampler->bind(1);
+        }
+        else
+        {
+            sampler->unbind(1);
+        }
+        
+        
         // send the unit number to the uniform variable "tex"
+
         shader->set("material.specular", 1);
         // ---------- roughness tex -----------  //
         glActiveTexture(GL_TEXTURE2);
-        roughness_tex->bind();
-        sampler->bind(2);
+        if(roughness_tex)
+        {  
+            roughness_tex->bind();
+        }
+        else
+        {
+            roughness_tex->unbind();
+        }
+        if(sampler)
+        {  // we bind the sampler to unit 2 (which is specified by the 1st parameter of the following function).
+            sampler->bind(2);
+        }
+        else
+        {
+            sampler->unbind(2);
+        }
         shader->set("material.roughness",2);
         // ---------- ambient_occlusion tex -----------  //
         glActiveTexture(GL_TEXTURE3);
-        ao_tex->bind();
-        sampler->bind(3);
+        if(ao_tex)
+        {  
+            ao_tex->bind();
+        }
+        else
+        {
+            ao_tex->unbind();
+        }
+
+        if(sampler)
+        {  // we bind the sampler to unit 3 (which is specified by the 1st parameter of the following function).
+            sampler->bind(3);
+        }
+        else
+        {
+            sampler->unbind(3);
+        }
         shader->set("material.ambient_occlusion", 3);
         // ---------- emission tex -----------  //
         glActiveTexture(GL_TEXTURE4);
-        emission_tex->bind();
-        sampler->bind(4);
+        if(emission_tex)
+        {  
+            emission_tex->bind();
+        }
+        else
+        {
+            emission_tex->unbind();
+        }
+        if(sampler)
+        {  // we bind the sampler to unit 4 (which is specified by the 1st parameter of the following function).
+            sampler->bind(4);
+        }
+        else
+        {
+            sampler->unbind(4);
+        }
         shader->set("material.emission", 4);
     }
 

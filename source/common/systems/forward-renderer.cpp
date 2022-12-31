@@ -217,10 +217,9 @@ namespace our {
             //multiply the VP matrix with the localToWorld matrix to get the model-view-projection matrix
             opaque.material->shader->set("transform",  opaque.localToWorld);
             //calculate the light for opaque objects
-            opaque.material->shader->set("object_to_world", opaque.localToWorld);
-            opaque.material->shader->set("object_to_world_inv_transpose", glm::transpose(glm::inverse(opaque.localToWorld)));
-            opaque.material->shader->set("view_projection", VP);
-            opaque.material->shader->set("camera_position", camera->getOwner()->getLocalToWorldMatrix()* glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f));
+            opaque.material->shader->set("transform_IT", glm::transpose(glm::inverse(opaque.localToWorld)));
+            opaque.material->shader->set("VP", VP);
+            opaque.material->shader->set("eye", camera->getOwner()->getLocalToWorldMatrix()* glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f));
 
             setLightShaders(opaque.material->shader);
 
@@ -257,10 +256,10 @@ namespace our {
         // Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
         for (auto transparent : transparentCommands) {
             transparent.material->setup();
-            transparent.material->shader->set("object_to_world", transparent.localToWorld);
-            transparent.material->shader->set("object_to_world_inv_transpose", glm::transpose(glm::inverse(transparent.localToWorld)));
-            transparent.material->shader->set("view_projection", VP);
-            transparent.material->shader->set("camera_position", camera->getOwner()->getLocalToWorldMatrix()* glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f));
+            transparent.material->shader->set("transform", transparent.localToWorld);
+            transparent.material->shader->set("transform_IT", glm::transpose(glm::inverse(transparent.localToWorld)));
+            transparent.material->shader->set("VP", VP);
+            transparent.material->shader->set("eye", camera->getOwner()->getLocalToWorldMatrix()* glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f));
             setLightShaders(transparent.material->shader);
             transparent.mesh->draw();
 
