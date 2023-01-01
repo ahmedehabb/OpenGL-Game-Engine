@@ -97,9 +97,9 @@ namespace our
             if(app->getKeyboard().isPressed(GLFW_KEY_D)) position += right * (deltaTime * steeringVelocity);
             if(app->getKeyboard().isPressed(GLFW_KEY_A)) position -= right * (deltaTime * steeringVelocity);
         }
-        void resetPosision()
+        void resetPosition()
         {
-            playerEntity->localTransform.position = glm::vec3(0,0,5);
+            playerEntity->localTransform.position = glm::vec3(0.0f,-3.0f,-5.0f);
         }
     };
     

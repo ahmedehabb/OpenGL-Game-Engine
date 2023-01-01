@@ -74,6 +74,16 @@ namespace our
 				}
                 
 			}
+			if (score == 0)
+			{
+				win = true;
+				std::cout << "win" << std::endl;
+			}
+			else
+			{
+				win = false;
+			}
+
 		}
 	};
 	int GameMananger::score = 0;

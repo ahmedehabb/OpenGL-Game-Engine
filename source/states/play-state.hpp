@@ -46,6 +46,8 @@ class Playstate: public our::State {
         renderer.initialize(size, config["renderer"]);
     }
 
+    
+
     void onDraw(double deltaTime) override {
         // Here, we just run a bunch of systems to control the world logic
         movementSystem.update(&world, (float)deltaTime);
@@ -73,6 +75,24 @@ class Playstate: public our::State {
 
         ImGui::Text("Crazy TAXI");
         ImGui::Text("Score: %d", our::GameMananger::gm.score);
+        if (our::GameMananger::gameOver)
+        {
+            if (our::GameMananger::win)
+            {
+                ImGui::Text("WINNER!!");
+            }
+            else 
+                ImGui::Text("GAME OVER!!");
+
+            if (ImGui::Button("Restart Game")) {
+                createLevel(std::rand() % 5 + 1);
+                
+                cameraController.resetPosition(&world);
+                our::GameMananger::gameOver = false;
+                our::GameMananger::win = false;
+                our::GameMananger::score = 0;
+            }
+        }
         ImGui::End();
 
     }
@@ -86,5 +106,42 @@ class Playstate: public our::State {
         world.clear();
         // and we delete all the loaded assets to free memory on the RAM and the VRAM
         our::clearAllAssets();
+    }
+    void createLevel(int diffuclity)
+    {
+        for(auto entity : world.getEntities())
+        {
+            if(entity->tag == "obstacle")
+                world.markForRemoval(entity);
+        }
+        
+        world.deleteMarkedEntities();
+        for (int i = 0; i < diffuclity; i++)
+        {
+            float z = 1 + (std::rand() % 45) * -1;
+            float x = -8 + (std::rand() % 16);
+            instantiateCars(glm::vec3(x,-1,z));
+        }
+    }
+    void instantiateCars(glm::vec3 position)
+    {
+        //instantiate coin
+        our::Entity* obstacle = world.add();
+        obstacle->tag = "obstacle";
+        obstacle->name = "obstacle";
+        obstacle->parent = nullptr;
+        obstacle->localTransform.position = position;
+        obstacle->localTransform.scale = glm::vec3(0.05, 0.05, 0.05);
+        obstacle->localTransform.rotation = glm::vec3(glm::radians(-90.0f), 0, 0);
+        //add mesh renderer
+        obstacle->addComponent<our::MeshRendererComponent>();
+        obstacle->getComponent<our::MeshRendererComponent>()->mesh = our::AssetLoader<our::Mesh>::get("car");
+        obstacle->getComponent<our::MeshRendererComponent>()->material = our::AssetLoader<our::Material>::get("car");
+        
+        //add collision 
+        obstacle->addComponent<our::CollisionComponent>();
+        obstacle->getComponent<our::CollisionComponent>()->center = glm::vec3(0, 0, 0);
+        obstacle->getComponent<our::CollisionComponent>()->radius = 3;
+        
     }
 };

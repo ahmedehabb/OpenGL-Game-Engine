@@ -111,6 +111,18 @@ namespace our
                 app->getMouse().unlockMouse(app->getWindow());
             }
         }
+            void resetPosition(World* world)
+        {
+            CameraComponent* camera = nullptr;
+            FreeCameraControllerComponent *controller = nullptr;
+            for(auto entity : world->getEntities()){
+                camera = entity->getComponent<CameraComponent>();
+                controller = entity->getComponent<FreeCameraControllerComponent>();
+                if(camera && controller) break;
+            }
+            Entity* entity = camera->getOwner();
+            entity->localTransform.position = glm::vec3(0.0f,2.0f,10.0f);
+        }
 
     };
 

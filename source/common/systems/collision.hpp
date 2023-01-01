@@ -62,7 +62,7 @@ namespace our
                 if (collision && entity->name != "car")
                 {  
                     
-
+                    std::cout<<"Angle of rotation is"<<entity->localTransform.rotation[0]<<std::endl;
                     // get the new radius and position of the entity
                     glm::vec3 newPosition = collision->center + glm::vec3(entity->getLocalToWorldMatrix() * glm::vec4(0, 0, 0, 1));
                     float newRadius = collision->radius ;
@@ -73,6 +73,7 @@ namespace our
                         // collision occurred
                         if (entity->tag == "finish")
                         {
+                            // our::GameMananger::gm.downScore(OBSTACLE_SCORE);
                             our::GameMananger::gameOver = true;
                         }
                         if(entity->tag == "obstacle")
@@ -82,7 +83,6 @@ namespace our
 
                             // ImGui::Text("Score: %d", our::GameMananger::gm.score);
                             // ImGui::End();
-                        
 
                         }
                         
