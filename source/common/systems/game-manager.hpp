@@ -54,6 +54,11 @@ namespace our
 		// This should be called every frame to update all entities containing a MovementComponent. 
 		void update(double deltatime) {
 		
+			// if(gameOver)
+			// {
+			// 	app->changeState("menu");
+			// 	return;
+			// }
 			if (app->getKeyboard().justPressed(GLFW_KEY_ESCAPE))
 			{
 				switch (currentState)

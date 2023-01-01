@@ -35,6 +35,7 @@ namespace our {
     void Entity::deserialize(const nlohmann::json& data){
         if(!data.is_object()) return;
         name = data.value("name", name);
+        tag = data.value("tag", tag);
         localTransform.deserialize(data);
         if(data.contains("components")){
             if(const auto& components = data["components"]; components.is_array()){

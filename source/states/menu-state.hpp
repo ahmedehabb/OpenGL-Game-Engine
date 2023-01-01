@@ -178,4 +178,5 @@ class Menustate: public our::State {
         delete highlightMaterial->shader;
         delete highlightMaterial;
     }
+
 };

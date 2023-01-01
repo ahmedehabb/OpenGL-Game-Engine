@@ -209,7 +209,8 @@
                     }
                 ],
                 "children": [
-                    {
+                    {   "tag":"car",
+                        "name": "car",
                         "position": [0, -3, -5],
                         "rotation": [-90, 0, 0],
                         "scale": [0.05, 0.05, 0.05],
@@ -219,6 +220,11 @@
                                 "mesh": "car",
                                 "material": "car"
                                
+                            },
+                            {
+                                "type": "Collision",
+                                "center": [ 0, 0, 0 ],
+                                "radius": 3
                             }
                             
                         ]
@@ -226,8 +232,115 @@
                     
                 ]
             },
+            {"tag":"obstacle",
+            "name": "obstacle",
+            "position": [0, -1, 0],
+            "rotation": [-90, 0, 0],
+            "scale": [0.05, 0.05, 0.05],
+            "components": [
+                {
+                    "type": "Mesh Renderer",
+                    "mesh": "car",
+                    "material": "car"
+                   
+                },
+                {
+                    "type": "Collision",
+                    "center": [ 0, 0, 0 ],
+                    "radius": 3
+                }
+
+
+
+                
+            ]
+        },
+
+        {
+            "tag":"obstacle",
+            "name": "obstacle",
+            "position": [4, -1, 0],
+            "rotation": [-90, 0, 0],
+            "scale": [0.05, 0.05, 0.05],
+            "components": [
+                {
+                    "type": "Mesh Renderer",
+                    "mesh": "car",
+                    "material": "car"
+                
+                },
+                {
+                    "type": "Collision",
+                    "center": [ 0, 0, 0 ],
+                    "radius": 3
+                }
+
+            ]
+        },
+        {
+        "tag":"obstacle",
+        "name": "obstacle",
+        "position": [0, -1, 0],
+        "rotation": [-90, 0, 0],
+        "scale": [0.05, 0.05, 0.05],
+        "components": [
+            {
+                "type": "Mesh Renderer",
+                "mesh": "car",
+                "material": "car"
+            
+            },
+            {
+                "type": "Collision",
+                "center": [ 0, 0, 0 ],
+                "radius": 3
+            }
+
+
+            
+            
+        ]
+    },
+
+    {
+        "tag":"obstacle",
+        "name": "obstacle",
+        "position": [0, -1, -10],
+        "rotation": [-90, 0, 0],
+        "scale": [0.05, 0.05, 0.05],
+        "components": [
+            {
+                "type": "Mesh Renderer",
+                "mesh": "car",
+                "material": "car"
+            
+            },
+            {
+                "type": "Collision",
+                "center": [ 0, 0, 0 ],
+                "radius": 2
+            }
+
+
+            
+            
+        ]
+    },
+
+
+
+
+
+
+            
+            
+            
+            
+            
             {
                 "rotation": [-45, 0, 0],
+                "name":"obstacle",
+                "tag":"obstacle",
                 "components": [
                     {
                         "type": "Mesh Renderer",
@@ -235,10 +348,15 @@
                         "material": "monkey"
                     },
                     {
-                        "type": "Movement",
-                        "linearVelocity": [0, 0.1, 0],
-                        "angularVelocity": [0, 45, 0]
+                        "type": "Collision",
+                        "center": [ 0, 0, 0 ],
+                        "radius": 1
                     }
+                    // {
+                    //     "type": "Movement",
+                    //     "linearVelocity": [0, 0.1, 0],
+                    //     "angularVelocity": [0, 45, 0]
+                    // }
                 ]
             },
             {
