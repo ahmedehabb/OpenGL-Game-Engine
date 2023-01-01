@@ -95,7 +95,18 @@ namespace our
             // Q & E moves the player up and down
             // if(app->getKeyboard().isPressed(GLFW_KEY_Q)) position += up * (deltaTime * current_sensitivity.y);
             // if(app->getKeyboard().isPressed(GLFW_KEY_E)) position -= up * (deltaTime * current_sensitivity.y);
-            if (app->getKeyboard().isPressed(GLFW_KEY_SPACE)) position += up * (deltaTime * current_sensitivity.y);
+            if (app->getKeyboard().isPressed(GLFW_KEY_SPACE)) 
+            {
+                position += up * (deltaTime * current_sensitivity.y);
+            }
+            //on release of space, move down
+            if(position.y > 2.0f && !app->getKeyboard().isPressed(GLFW_KEY_SPACE))
+            {
+                position -= up * (deltaTime * current_sensitivity.y * 2.0f);
+                position = glm::max(position, glm::vec3(position.x, 2.0f, position.z));
+            }
+           
+
             
 
 
